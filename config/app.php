@@ -156,6 +156,15 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // Dingo service provider
+        Dingo\Api\Provider\LaravelServiceProvider::class,
+
+        // Oauth 2.0 service provider
+        LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class,
+        LucaDegasperi\OAuth2Server\OAuth2ServerServiceProvider::class,
+
+        // App\Providers\OAuthServiceProvider::class,
+
     ],
 
     /*
@@ -201,6 +210,11 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        // Oauth2 alias
+        'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
+
+        'Helper' => App\Helpers\Helper::class,
 
     ],
 
