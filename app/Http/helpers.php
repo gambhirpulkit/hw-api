@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class Helper
 {
-    public static function generateOtp($mobile, $otp)
+    public static function generateOtp($mobile, $otp, $msg)
     {
 
 
@@ -21,7 +21,7 @@ class Helper
 		    $otp_prefix = ':';
 
 		    //Your message to send, Add URL encoding here.
-		    $message = urlencode($otp.$otp_prefix." is your OTP. Welcome to HappyWise!");
+		    $message = $msg;
 
 			//Define route 
 			$route = "4";

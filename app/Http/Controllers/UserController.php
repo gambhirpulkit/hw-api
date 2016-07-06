@@ -49,7 +49,12 @@ class UserController extends Controller
 
 			$saveCode = \App\OtpCode::create($insertCode);
 
-			\Helper::generateOtp((string)Input::get("phone"), (string)$rand);
+		    $otp_prefix = ':';
+
+		    //Your message to send, Add URL encoding here.
+		    $msg = urlencode($rand.$otp_prefix." is your OTP. Welcome to HappyWise!");
+
+			\Helper::generateOtp((string)Input::get("phone"), (string)$rand, (string)$msg);
 
 			// return "saved";
 			if($save) {
@@ -211,7 +216,9 @@ class UserController extends Controller
 	    		if($user_codes->expires > time()) {
 	    			$code = $user_codes->codes;
 
-					\Helper::generateOtp((string)$phone, (string)$code);	    			
+	    			$msg = urlencode($code." is your code to reset password for HappyWise. This code will last for 30min. Please do not share.");
+
+					\Helper::generateOtp((string)$phone, (string)$code, (string)$msg);	    			
 
 					$responseArray = [
 						'message' => 'Verification code generated',
@@ -224,7 +231,31 @@ class UserController extends Controller
 
 					$rand = mt_rand(100000,999999); 
 
-					\Helper::generateOtp((string)$phone, (string)$rand);				
+					$msg = urlencode($rand." is your code to reset password for HappyWise. This code will last for 30min. Please do not share.");
+
+					\Helper::generateOtp((string)$phone, (string)$rand, (string)$msg);				
+
+					$user_codes->codes = $rand;
+
+
+					$user_codes->save();
+
+					$responseArray = [
+						'message' => 'Verification code generated',
+						'status_code' => 200
+					];
+						
+					return response()->json($responseArray);						
+
+				}   		
+
+	    	}
+	    	else {
+					$rand = mt_rand(100000,999999); 
+
+					$msg = urlencode($rand." is your code to reset password for HappyWise. This code will last for 30min. Please do not share.");
+
+					\Helper::generateOtp((string)$phone, (string)$rand, (string)$msg);				
 
 					$insertCode = array(
 						"user_id" => $user->id,
@@ -240,10 +271,7 @@ class UserController extends Controller
 						'status_code' => 200
 					];
 						
-					return response()->json($responseArray);						
-
-				}   		
-
+					return response()->json($responseArray);		    		
 	    	}
 
     	}
@@ -256,9 +284,6 @@ class UserController extends Controller
 			return response()->json($responseArray);	    		
     	}
 
-
-	
-    	
     }
 
     public function verifyPassword() {
@@ -282,7 +307,7 @@ class UserController extends Controller
 	    		$user->save();
 
 				$responseArray = [
-					'message' => 'Phone verified',
+					'message' => 'Phone verified and password changed',
 					'status_code' => 200
 				];
 				
@@ -293,7 +318,7 @@ class UserController extends Controller
 
 				$responseArray = [
 					'message' => 'Code expires. Regenerate otp.',
-					'status_code' => 400
+					'status_code' => 403
 				];
 				
 				return response()->json($responseArray);	
