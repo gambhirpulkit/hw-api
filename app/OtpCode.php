@@ -9,7 +9,7 @@ class OtpCode extends Model
     protected $table = 'otp_codes';
 
     protected $fillable = [
-        'user_id', 'codes', 
+        'user_id', 'codes','expires' 
     ];    
     
 }

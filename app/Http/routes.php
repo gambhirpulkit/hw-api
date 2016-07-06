@@ -35,6 +35,10 @@ $api->version('v1', function ($api) {
 
     $api->post('user/login', 'App\Http\Controllers\UserController@login');  
 
+    $api->get('user/forgot_pwd/{phone}', 'App\Http\Controllers\UserController@forgotPassword');
+
+    $api->post('user/verify_pwd', 'App\Http\Controllers\UserController@verifyPassword');
+
 });
 
 
@@ -43,9 +47,11 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     $api->get('user/validate', 'App\Http\Controllers\UserController@validateUser');
 
-    $api->get('user/otp/{code}', 'App\Http\Controllers\UserController@userOtp');
+    $api->get('user/otp/{code}', 'App\Http\Controllers\UserController@verifyOtp');
 
     $api->get('user/user_screen', 'App\Http\Controllers\UserController@userScreen');
+
+
 
 
 });

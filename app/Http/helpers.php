@@ -21,7 +21,7 @@ class Helper
 		    $otp_prefix = ':';
 
 		    //Your message to send, Add URL encoding here.
-		    $message = urlencode($otp.$otp_prefix." is your OTP. Welcome to Bille!");
+		    $message = urlencode($otp.$otp_prefix." is your OTP. Welcome to HappyWise!");
 
 			//Define route 
 			$route = "4";

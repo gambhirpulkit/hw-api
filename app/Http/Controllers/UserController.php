@@ -42,8 +42,10 @@ class UserController extends Controller
 
 			$insertCode = array(
 				"user_id" => $save->id,
-				"codes" => $rand
-			);			
+				"codes" => $rand,
+				"expires" => time() + 1800
+			);	
+
 
 			$saveCode = \App\OtpCode::create($insertCode);
 
@@ -113,28 +115,44 @@ class UserController extends Controller
 
     }
 
-    public function userOtp($code) {
+    public function verifyOtp($code) {
 
     	$user_id = \Authorizer::getResourceOwnerId();
 
     	// $code = Input::get('code');
     	$user_codes = \App\OtpCode::where('user_id', '=', $user_id)->first();
+    	// echo $user_codes->expires - time(); exit;
 
     	if($code == $user_codes->codes) {
 
-			$user = \App\User::find($user_id);
+	    	if($user_codes->expires > time()) {
 
-			$user->phone_flag = 1;
-			$user->active = 1;
+				$user = \App\User::find($user_id);
 
-			$user->save();
+				$user->phone_flag = 1;
+				$user->ques_flag = 1; // To be deleted
+				$user->active = 1;
 
-			$responseArray = [
-				'message' => 'Phone verified',
-				'status_code' => 200
-			];
-			
-			return response()->json($responseArray);
+				$user->save();
+
+				$responseArray = [
+					'message' => 'Phone verified',
+					'status_code' => 200
+				];
+				
+				return response()->json($responseArray);	
+
+	    	}
+	    	else{
+
+				$responseArray = [
+					'message' => 'Code expires. Regenerate otp.',
+					'status_code' => 400
+				];
+				
+				return response()->json($responseArray);	
+	    	}
+
 
     	}
     	else {
@@ -148,7 +166,7 @@ class UserController extends Controller
     	}
     	
 
-    	echo $code;
+    	
 	}
 
     public function userScreen() {
@@ -180,5 +198,124 @@ class UserController extends Controller
 		return response()->json($responseArray);	
 
     }	
+
+    public function forgotPassword($phone) {
+
+    	$user = \App\User::where('phone', '=', $phone)->first();
+
+    	if($user) {
+
+	    	$user_codes = \App\OtpCode::where('user_id', '=', $user->id)->first();
+
+	    	if($user_codes){
+	    		if($user_codes->expires > time()) {
+	    			$code = $user_codes->codes;
+
+					\Helper::generateOtp((string)$phone, (string)$code);	    			
+
+					$responseArray = [
+						'message' => 'Verification code generated',
+						'status_code' => 200
+					];
+						
+					return response()->json($responseArray);	
+	    		}
+	    		else {
+
+					$rand = mt_rand(100000,999999); 
+
+					\Helper::generateOtp((string)$phone, (string)$rand);				
+
+					$insertCode = array(
+						"user_id" => $user->id,
+						"codes" => $rand,
+						"expires" => time() + 1800
+					);	
+
+
+					$saveCode = \App\OtpCode::create($insertCode);
+
+					$responseArray = [
+						'message' => 'Verification code generated',
+						'status_code' => 200
+					];
+						
+					return response()->json($responseArray);						
+
+				}   		
+
+	    	}
+
+    	}
+    	else {
+			$responseArray = [
+				'message' => 'User does not exist',
+				'status_code' => 404
+			];
+				
+			return response()->json($responseArray);	    		
+    	}
+
+
+	
+    	
+    }
+
+    public function verifyPassword() {
+
+		
+		$password = Input::get("password");
+		$code = Input::get('code');
+		$phone = Input::get('phone');
+
+    	$user = \App\User::where('phone', '=', $phone)->first();
+
+    	$user_codes = \App\OtpCode::where('user_id', '=', $user->id)->first();
+    	// echo $user_codes->expires - time(); exit;
+
+    	if($code == $user_codes->codes) {
+
+	    	if($user_codes->expires > time()) {
+
+	    		$user->password = \Hash::make($password);
+
+	    		$user->save();
+
+				$responseArray = [
+					'message' => 'Phone verified',
+					'status_code' => 200
+				];
+				
+				return response()->json($responseArray);	
+
+	    	}
+	    	else{
+
+				$responseArray = [
+					'message' => 'Code expires. Regenerate otp.',
+					'status_code' => 400
+				];
+				
+				return response()->json($responseArray);	
+	    	}
+
+
+    	}
+    	else {
+
+			$responseArray = [
+				'message' => 'Invalid code',
+				'status_code' => 400
+			];
+			
+			return response()->json($responseArray);
+    	}
+    	
+
+    	
+	}
+
+
+
 
 }

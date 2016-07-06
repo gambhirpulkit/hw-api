@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->integer('ques_flag');
             $table->integer('active');
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps();   
         });
     }
 
