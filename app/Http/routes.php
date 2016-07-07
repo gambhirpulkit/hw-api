@@ -19,10 +19,6 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
 
-	$api->get('users', function() {
-		return "hey";
-	});	
-
     $api->post('oauth/access_token', function() {
         return Authorizer::issueAccessToken();
     });
@@ -39,12 +35,17 @@ $api->version('v1', function ($api) {
 
     $api->post('user/verify_pwd', 'App\Http\Controllers\UserController@verifyPassword');
 
+
+    // Trainer API's
+    $api->post('trainer/login', 'App\Http\Controllers\TrainerController@login');    
+
 });
 
 
 
 $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
+    // Patient API's
     $api->get('user/validate', 'App\Http\Controllers\UserController@validateUser');
 
     $api->get('user/otp/{code}', 'App\Http\Controllers\UserController@verifyOtp');
@@ -52,5 +53,9 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
     $api->get('user/user_screen', 'App\Http\Controllers\UserController@userScreen');
 
     $api->get('user/resend_otp', 'App\Http\Controllers\UserController@resendOtp');
+
+
+    // Trainer API's
+
 
 });

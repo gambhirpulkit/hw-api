@@ -220,7 +220,7 @@ class UserController extends Controller
 
 				$responseArray = [
 					'message' => 'Otp resent.',
-					'status_code' => 400
+					'status_code' => 200
 				];
 					
 				return response()->json($responseArray);	
@@ -392,9 +392,7 @@ class UserController extends Controller
 			
 			return response()->json($responseArray);
     	}
-    	
-
-    	
+    	    	
 	}
 
 
