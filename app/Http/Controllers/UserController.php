@@ -86,9 +86,6 @@ class UserController extends Controller
 
 		if (\App\User::where('email', '=', $username)->exists() || \App\User::where('phone', '=', $username)->exists()) {
 
-	       // \Helper::generateOtp();
-	        // $gmail = Input::get('gmail');
-
 	        if (\Auth::attempt(array('email' => $username, 'password' => $password)) || \Auth::attempt(array('phone' => $username, 'password' => $password))){
 
 				$responseArray = [
@@ -169,7 +166,67 @@ class UserController extends Controller
 			
 			return response()->json($responseArray);
     	}
-    	
+    	    	
+	}
+
+
+    public function resendOtp() {
+
+    	$user_id = \Authorizer::getResourceOwnerId();
+
+    	// $code = Input::get('code');
+    	$user_codes = \App\OtpCode::where('user_id', '=', $user_id)->first();
+
+		$user = \App\User::find($user_id);
+		$phone = $user->phone;
+
+		if($user_codes) {
+
+		    if($user_codes->expires > time()) {
+
+			    $otp_prefix = ':';
+			    $code = $user_codes->codes;
+
+			    //Your message to send, Add URL encoding here.
+			    $msg = urlencode($code.$otp_prefix." is your OTP. Welcome to HappyWise!");
+
+				\Helper::generateOtp((string)$phone, (string)$code, (string)$msg);	    		
+
+				$responseArray = [
+					'message' => 'Otp Resent',
+					'status_code' => 200
+				];
+					
+				return response()->json($responseArray);	
+
+		    }
+
+		    else{
+
+		    	// echo $user_codes->codes; exit;
+		    	$rand = mt_rand(100000,999999);
+
+				$user_codes->codes = $rand;
+				$user_codes->expires = time() + 1800;
+
+				$user_codes->save();
+
+			    $otp_prefix = ':';
+
+			    //Your message to send, Add URL encoding here.
+			    $msg = urlencode($rand.$otp_prefix." is your OTP. Welcome to HappyWise!");
+
+				\Helper::generateOtp((string)$phone, (string)$rand, (string)$msg);
+
+				$responseArray = [
+					'message' => 'Otp resent.',
+					'status_code' => 400
+				];
+					
+				return response()->json($responseArray);	
+		    }
+
+		}
 
     	
 	}

@@ -51,7 +51,6 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     $api->get('user/user_screen', 'App\Http\Controllers\UserController@userScreen');
 
-
-
+    $api->get('user/resend_otp', 'App\Http\Controllers\UserController@resendOtp');
 
 });
