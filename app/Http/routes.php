@@ -9,9 +9,21 @@
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
 |
-*/
+*/  
 
-Route::get('/', function () {
+use Illuminate\Support\Facades\App;
+
+
+Route::get('/home', function () {
+
+    $pusher = App::make('pusher');
+
+    $array['name'] = 'joe';
+    $array['message_count'] = 23;    
+
+    $pusher->trigger( 'test-channel',
+                      'test-event', 
+                      $array);    
     return view('welcome');
 });
 
@@ -35,9 +47,13 @@ $api->version('v1', function ($api) {
 
     $api->post('user/verify_pwd', 'App\Http\Controllers\UserController@verifyPassword');
 
-
     // Trainer API's
-    $api->post('trainer/login', 'App\Http\Controllers\TrainerController@login');    
+    $api->post('trainer/login', 'App\Http\Controllers\TrainerController@login');  
+
+    $api->get('trainer/forgot_pwd/{phone}', 'App\Http\Controllers\TrainerController@forgotPwd');
+
+    $api->post('trainer/verify_pwd', 'App\Http\Controllers\TrainerController@verifyPwd');
+
 
 });
 
@@ -54,8 +70,22 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     $api->get('user/resend_otp', 'App\Http\Controllers\UserController@resendOtp');
 
+    $api->get('user/change_pwd', 'App\Http\Controllers\UserController@changePwd');
+
+    $api->get('user/new_pwd', 'App\Http\Controllers\UserController@newPwd');
+
+    $api->get('user/resend_otp', 'App\Http\Controllers\UserController@resendOtp');
+
+    $api->post('user/change_email', 'App\Http\Controllers\UserController@changeEmail');
+
+    $api->post('user/change_phone', 'App\Http\Controllers\UserController@changePhone');
+
+    $api->get('user/verify_code/{code}/{new_phone}', 'App\Http\Controllers\UserController@verifyCode');
 
     // Trainer API's
+    $api->get('trainer/change_pwd', 'App\Http\Controllers\TrainerController@changePwd');
+
+    $api->get('trainer/new_pwd', 'App\Http\Controllers\TrainerController@newPwd');    
 
 
 });

@@ -18,8 +18,6 @@ class OAuthClientTableSeeder extends Seeder
 
         ]);
 
-
-
         \App\OAuthClient::create([
             'id' => 'g3b259fde3ed9ff3843833b',
             'secret' => '3d7h5f8f793d59c25502c0ae8c4a95b',
@@ -32,6 +30,14 @@ class OAuthClientTableSeeder extends Seeder
             'secret' => '3d7f5f8f795d59c25502c0ae8c4a95b',
             'name' => 'web'
 
+        ]);        
+
+        \App\OAuthClient::create([
+            'id' => 'g3b259gre3ed9ff3143839b',
+            'secret' => '3d7f5f8f795d51c25502c0ae8c4a95b',
+            'name' => 'android-trainer'
+
         ]);                
+
     }
 }

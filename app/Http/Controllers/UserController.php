@@ -8,8 +8,6 @@ use Illuminate\Support\Facades\Input as Input;
 
 use App\Http\Requests;
 
-// use App\Helpers\Helper;
-
 
 class UserController extends Controller
 {
@@ -395,6 +393,162 @@ class UserController extends Controller
     	    	
 	}
 
+	public function changeEmail(){
+		$new_email = Input::get("new_email");
+
+		$user_id = \Authorizer::getResourceOwnerId();
+
+		// echo $user_id; exit;
+		$user = \App\User::find($user_id);
+
+		$check_user = \App\User::where('email', '=', $new_email)->exists();
+
+		// echo $check_user; exit;
+
+		if($check_user && $new_email != $user->email) {
+			$responseArray = [
+				'message' => 'Email already exist',
+				'status_code' => 400
+			];
+			
+			return response()->json($responseArray);			
+		}
+		else {
+
+			$user->email = $new_email;
+			$user->save();
+
+			$responseArray = [
+				'message' => 'Email changed',
+				'status_code' => 200
+			];
+			
+			return response()->json($responseArray);					
+		}
+
+	}
+
+	public function changePhone() {
+
+		$new_phone = Input::get("new_phone");
+
+		$user_id = \Authorizer::getResourceOwnerId();
+
+		$user = \App\User::find($user_id);
+
+		$check_user = \App\User::where('phone', '=', $new_phone)->exists();
+
+		if($check_user) {
+			$responseArray = [
+				'message' => 'Phone no. already exist',
+				'status_code' => 400
+			];
+			
+			return response()->json($responseArray);	
+		}
+		else {
+			
+
+
+			$user_codes = \App\OtpCode::where('user_id', '=', $user_id)->first();
+
+			if($user_codes) {
+				if($user_codes->expires > time()) {
+
+					$msg = urlencode($user_codes->codes." is your code to change mobile number for HappyWise. This code will last for 30min. Please do not share.");							
+					\Helper::generateOtp((string)$new_phone, (string)$user_codes->codes, (string)$msg);
+
+			
+
+					$responseArray = [
+						'message' => 'Verification code generated',
+						'status_code' => 200
+					];
+					
+					return response()->json($responseArray);					
+				}
+				else {
+					$rand = mt_rand(100000,999999); 
+					$user_codes->codes = $rand;
+					$user_codes->expires = time() + 1800;
+					$msg = urlencode($rand." is your code to change mobile number for HappyWise. This code will last for 30min. Please do not share.");					
+
+					$user_codes->save();
+
+					\Helper::generateOtp((string)$new_phone, (string)$rand, (string)$msg);
+
+					$responseArray = [
+						'message' => 'Verification code generated',
+						'status_code' => 200
+					];
+					
+					return response()->json($responseArray);
+				}
+			}
+			else {
+					$rand = mt_rand(100000,999999); 				
+
+					$insertCode = array(
+						"user_id" => $user_id,
+						"codes" => $rand,
+						"expires" => time() + 1800
+					);	
+					$msg = urlencode($rand." is your code to change mobile number for HappyWise. This code will last for 30min. Please do not share.");	
+
+					\Helper::generateOtp((string)$new_phone, (string)$rand, (string)$msg);
+
+					$saveCode = \App\OtpCode::create($insertCode);
+
+					$responseArray = [
+						'message' => 'Verification code generated',
+						'status_code' => 200
+					];
+					return response()->json($responseArray);					
+
+			}
+
+								
+		}
+	}
+
+	public function verifyCode($code, $new_phone) {
+
+    	$user_id = \Authorizer::getResourceOwnerId();
+
+    	// $code = Input::get('code');
+    	$user_codes = \App\OtpCode::where('user_id', '=', $user_id)->first();
+    	// echo $user_codes->expires - time(); exit;
+
+    	if($code == $user_codes->codes) {
+
+	    	if($user_codes->expires > time()) {
+
+				$user = \App\User::find($user_id);
+
+				$user->phone = $new_phone;
+
+				$user->save();
+
+				$responseArray = [
+					'message' => 'Phone Number changed',
+					'status_code' => 200
+				];
+				
+				return response()->json($responseArray);	
+
+	    	}
+	    	else{
+
+				$responseArray = [
+					'message' => 'Code expires. Regenerate otp.',
+					'status_code' => 400
+				];
+				
+				return response()->json($responseArray);	
+	    	}
+
+	}
+}
 
 
 

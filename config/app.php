@@ -165,6 +165,9 @@ return [
 
         // App\Providers\OAuthServiceProvider::class,
 
+        // Pusher provider
+        Vinkla\Pusher\PusherServiceProvider::class,
+
     ],
 
     /*

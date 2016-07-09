@@ -15,6 +15,7 @@ class TrainersTableSeeder extends Seeder
             
             'name' => 'Girish Singh',
             'email' => 'girish13@gmail.com',
+            'phone' => '8010127137',
             'password' => Hash::make('girish123'),
             'active' => 1,
 
