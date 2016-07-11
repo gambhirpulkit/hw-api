@@ -11,19 +11,10 @@
 |
 */  
 
-use Illuminate\Support\Facades\App;
-
 
 Route::get('/home', function () {
 
-    $pusher = App::make('pusher');
-
-    $array['name'] = 'joe';
-    $array['message_count'] = 23;    
-
-    $pusher->trigger( 'test-channel',
-                      'test-event', 
-                      $array);    
+ 
     return view('welcome');
 });
 
@@ -81,6 +72,8 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
     $api->post('user/change_phone', 'App\Http\Controllers\UserController@changePhone');
 
     $api->get('user/verify_code/{code}/{new_phone}', 'App\Http\Controllers\UserController@verifyCode');
+
+    $api->post('user/post_message', 'App\Http\Controllers\UserChatController@postMessage');
 
     // Trainer API's
     $api->get('trainer/change_pwd', 'App\Http\Controllers\TrainerController@changePwd');
