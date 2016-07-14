@@ -49,7 +49,6 @@ $api->version('v1', function ($api) {
 });
 
 
-
 $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     // Patient API's
@@ -73,12 +72,14 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     $api->get('user/verify_code/{code}/{new_phone}', 'App\Http\Controllers\UserController@verifyCode');
 
-    $api->post('user/post_message', 'App\Http\Controllers\UserChatController@postMessage');
 
     // Trainer API's
     $api->get('trainer/change_pwd', 'App\Http\Controllers\TrainerController@changePwd');
 
     $api->get('trainer/new_pwd', 'App\Http\Controllers\TrainerController@newPwd');    
 
+    // Common API's for trainer and patient
+    $api->post('post_message', 'App\Http\Controllers\ChatController@postMessage');
+    $api->post('previous_messages', 'App\Http\Controllers\ChatController@previousMessages');
 
 });

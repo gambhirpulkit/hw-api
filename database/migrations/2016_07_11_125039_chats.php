@@ -19,7 +19,8 @@ class Chats extends Migration
             $table->integer('trainer_id')->unsigned();
             $table->foreign('trainer_id')->references('id')->on('trainers');
             $table->string('message');
-            $table->string('type');            
+            $table->string('type');   
+            $table->string('sender');         
             $table->string('sent_time');
             $table->string('received_time');
             $table->timestamps();
