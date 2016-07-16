@@ -71,6 +71,8 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
     $api->post('user/change_phone', 'App\Http\Controllers\UserController@changePhone');
 
     $api->get('user/verify_code/{code}/{new_phone}', 'App\Http\Controllers\UserController@verifyCode');
+    
+    $api->post('user/reg_id', 'App\Http\Controllers\UserController@updateRegId');
 
 
     // Trainer API's
@@ -80,6 +82,10 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     // Common API's for trainer and patient
     $api->post('post_message', 'App\Http\Controllers\ChatController@postMessage');
-    $api->post('previous_messages', 'App\Http\Controllers\ChatController@previousMessages');
+
+    $api->get('push_message', 'App\Http\Controllers\ChatController@pushMessage');
+
+
+
 
 });

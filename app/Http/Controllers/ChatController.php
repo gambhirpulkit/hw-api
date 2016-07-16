@@ -59,7 +59,13 @@ class ChatController extends Controller
 			    $data['sending_time'] = $time_format;
 			    $data['name'] = $user->name;
 
-			    $val = $pusher->trigger('messages', 'new_message', $data);
+			    // $val = $pusher->trigger('messages', 'new_message', $data);
+
+				// The recipient device registration IDs
+				$ids = array($user->pushy_id);
+
+				// Send it with Pushy
+				\Helper::sendPushNotification($data, $ids);  			    
 
 			    // echo $val;
 
@@ -78,9 +84,14 @@ class ChatController extends Controller
 			    $data['sending_time'] = $time_format;
 			    $data['name'] = $trainer->name;
 
-			    $val = $pusher->trigger('messages', 'new_message', $data);   		    		
+			    // $val = $pusher->trigger('messages', 'new_message', $data);   		    	
 
-			    // echo $val;	    			
+				// The recipient device registration IDs
+				$ids = array($user->pushy_id);
+
+				// Send it with Pushy
+				\Helper::sendPushNotification($data, $ids);  				    	
+				  			
     		}
 
 
@@ -104,9 +115,15 @@ class ChatController extends Controller
     	return false;
     }
 
-    public function previousMessages() {
+    public function pushMessage() {
 
-    	
-    	
+		// Payload data you want to send to devices
+		$data = array('message' => 'Hello World!');
+
+		// The recipient device registration IDs
+		$ids = array('a9dcd7e5585862e52c74ad');
+
+		// Send it with Pushy
+		\Helper::sendPushNotification($data, $ids);    	   	
     }
 }

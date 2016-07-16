@@ -30,6 +30,7 @@ class UserController extends Controller
 				"password"	=>	\Hash::make($password),
 				"email"	=>	Input::get("email"),
 				"phone" =>	Input::get("phone"),
+				"pushy_id" =>	Input::get("pushy_id")
 			);
 			// print_r($insertData); exit;		
 
@@ -80,10 +81,16 @@ class UserController extends Controller
 
 	        $username = Input::get('username');
 	        $password = Input::get('password');
+	        $pushy_id = Input::get('pushy_id');
 
 		if (\App\User::where('email', '=', $username)->exists() || \App\User::where('phone', '=', $username)->exists()) {
 
 	        if (\Auth::attempt(array('email' => $username, 'password' => $password)) || \Auth::attempt(array('phone' => $username, 'password' => $password))){
+
+	        	$user = \App\User::where('email', '=', $username)->first();
+
+	        	$user->pushy_id = $pushy_id;
+	        	$user->save();
 
 				$responseArray = [
 					'message' => 'User authenticated',
@@ -549,6 +556,36 @@ class UserController extends Controller
 	}
 }
 
+	public function updateRegId() {
+
+		$user_id = \Authorizer::getResourceOwnerId();
+
+		$user = \App\User::find($user_id);
+
+		$pushy_id = Input::get('pushy_id');
+
+		$user->pushy_id = $pushy_id;
+
+		$save = $user->save();
+
+		if($save) {
+			$responseArray = [
+				'message' => 'Registration id updated',
+				'status_code' => 200
+			];
+				
+			return response()->json($responseArray);	
+		}
+		else {
+			$responseArray = [
+				'message' => 'Error updating registration id',
+				'status_code' => 400
+			];
+				
+			return response()->json($responseArray);	
+		}
+
+	}
 
 
 }

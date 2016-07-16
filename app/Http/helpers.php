@@ -68,4 +68,54 @@ class Helper
 			// echo "hey";    
         
     }
+
+    public static function sendPushNotification( $data, $ids ) {
+        // Insert your Secret API Key here
+        $apiKey = '0b08951311e19d18b21c0461127a5b9bbb7b97243f0ef1a27f4fbedaa90be447';
+
+        // Set post variables
+        $post = array(
+            'data'              => $data,
+            'registration_ids'  => $ids,
+        );
+
+        // Set Content-Type header since we're sending JSON
+        $headers = array(
+            'Content-Type: application/json'
+        );
+
+        // Initialize curl handle
+        $ch = curl_init();
+
+        // Set URL to Pushy endpoint
+        curl_setopt($ch, CURLOPT_URL, 'https://api.pushy.me/push?api_key=' . $apiKey);
+
+        // Set request method to POST
+        curl_setopt($ch, CURLOPT_POST, true);
+
+        // Set our custom headers
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        // Get the response back as string instead of printing it
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        // Set post data as JSON
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+
+        // Actually send the push
+        $result = curl_exec($ch);
+
+        // Display errors
+        if (curl_errno($ch)) {
+            echo curl_error($ch);
+        }
+
+        // Close curl handle
+        curl_close($ch);
+
+        // Debug API response
+        //echo $result;
+    }	    
+
+
 }
