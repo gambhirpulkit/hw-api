@@ -30,7 +30,7 @@ class PasswordGrantVerifier
                 'password' => $password,
             ];        
 
-        $trainer = \App\trainer::where('email', $email)->first();
+        $trainer = \App\Trainer::where('email', $email)->first();
         $hashedPassword = $trainer->password;
         // echo $hashedPassword; exit;
         // echo \Hash::check($password, $hashedPassword); exit;
