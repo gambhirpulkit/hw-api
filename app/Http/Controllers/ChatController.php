@@ -63,7 +63,7 @@ class ChatController extends Controller
 			    // $val = $pusher->trigger('messages', 'new_message', $data);
 
 				// The recipient device registration IDs
-				$ids = array($user->pushy_id, $trainer->pushy_id);
+				$ids = array($trainer->pushy_id);
 
 				// Send it with Pushy
 				\Helper::sendPushNotification($data, $ids);  			    
@@ -89,7 +89,7 @@ class ChatController extends Controller
 			    // $val = $pusher->trigger('messages', 'new_message', $data);   		    	
 
 				// The recipient device registration IDs
-				$ids = array($user->pushy_id, $trainer->pushy_id);
+				$ids = array($user->pushy_id);
 
 				// Send it with Pushy
 				\Helper::sendPushNotification($data, $ids);  				    	
