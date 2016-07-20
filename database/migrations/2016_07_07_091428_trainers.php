@@ -17,6 +17,7 @@ class Trainers extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone')->unique();
+            $table->string('pushy_id');
             $table->string('password');
             $table->integer('active');
             $table->rememberToken();

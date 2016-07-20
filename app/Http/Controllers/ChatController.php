@@ -46,7 +46,8 @@ class ChatController extends Controller
     	if($save) {
     		$val = NULL;
     		if($sender == 'user') {
-    			$user = \App\User::find($user_id); 
+    			$user = \App\User::find($user_id);
+    			$trainer = \App\Trainer::find($trainer_id); 
 
 			    $pusher = \App::make('pusher');
 			    
@@ -62,7 +63,7 @@ class ChatController extends Controller
 			    // $val = $pusher->trigger('messages', 'new_message', $data);
 
 				// The recipient device registration IDs
-				$ids = array($user->pushy_id);
+				$ids = array($user->pushy_id, $trainer->pushy_id);
 
 				// Send it with Pushy
 				\Helper::sendPushNotification($data, $ids);  			    
@@ -71,6 +72,7 @@ class ChatController extends Controller
 
     		}
     		else {
+    			$user = \App\User::find($user_id);
     			$trainer = \App\Trainer::find($trainer_id);
 
 			    $pusher = \App::make('pusher');
@@ -87,7 +89,7 @@ class ChatController extends Controller
 			    // $val = $pusher->trigger('messages', 'new_message', $data);   		    	
 
 				// The recipient device registration IDs
-				$ids = array($user->pushy_id);
+				$ids = array($user->pushy_id, $trainer->pushy_id);
 
 				// Send it with Pushy
 				\Helper::sendPushNotification($data, $ids);  				    	
