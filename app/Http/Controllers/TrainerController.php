@@ -29,7 +29,7 @@ class TrainerController extends Controller
 	        	// echo "hey"; exit;
 	        	$trainer->pushy_id = $pushy_id;
 	        	$trainer->save();	    		        	
-	        	
+
 				$responseArray = [
 					'message' => 'Trainer authenticated',
 					'data' => $trainer,
@@ -186,15 +186,15 @@ class TrainerController extends Controller
 
 	public function updateRegId() {
 
-		$user_id = \Authorizer::getResourceOwnerId();
+		$trainer_id = \Authorizer::getResourceOwnerId();
 
-		$user = \App\User::find($user_id);
+		$trainer = \App\Trainer::find($trainer_id);
 
 		$pushy_id = Input::get('pushy_id');
 
-		$user->pushy_id = $pushy_id;
+		$trainer->pushy_id = $pushy_id;
 
-		$save = $user->save();
+		$save = $trainer->save();
 
 		if($save) {
 			$responseArray = [
@@ -214,4 +214,17 @@ class TrainerController extends Controller
 		}
 
 	}    
+
+	public function listUsers() {
+
+		$trainer_id = \Authorizer::getResourceOwnerId();
+
+		$trainer = \App\Trainer::find($trainer_id);
+
+		$user = \App\User::get();
+
+		return $user;
+		
+	}   
+
 }

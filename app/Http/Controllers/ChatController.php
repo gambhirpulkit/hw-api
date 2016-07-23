@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input as Input;
 
 use App\Http\Requests;
-
+use Illuminate\Contracts\Filesystem\Filesystem;
 
 class ChatController extends Controller
 {
@@ -115,6 +115,43 @@ class ChatController extends Controller
     	
     	}
     	return false;
+    }
+
+    public function fileUpload() {
+
+    	$id = \Authorizer::getResourceOwnerId();
+    	// $id = 1;
+
+    	$file =	Input::file('file');
+    	$destinationPath = 'uploads'; // upload path
+      	$extension = $file->getClientOriginalExtension(); 
+    	$fileName = $id.'_'.time().rand(1111,9999).'.'.$extension; // renameing image
+    	$new_file = $file->move($destinationPath, $fileName); // uploading file to given path
+
+    	$s3 = \Storage::disk('s3');
+		$filePath =  $fileName;
+		$result = $s3->put($filePath, file_get_contents($new_file), 'public');
+
+		if($result) {
+
+			$responseArray = [
+				'message' => 'Upload successful',
+				'url' => $s3->url($fileName),
+				'status_code' => 502
+			];
+			return response()->json($responseArray);   	
+
+		}
+		else {
+
+			$responseArray = [
+				'message' => 'Error sending message.',
+				'status_code' => 502
+			];
+			return response()->json($responseArray);   
+
+		}
+    	
     }
 
     public function pushMessage() {

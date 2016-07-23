@@ -45,6 +45,7 @@ $api->version('v1', function ($api) {
 
     $api->post('trainer/verify_pwd', 'App\Http\Controllers\TrainerController@verifyPwd');
 
+    // $api->post('file_upload', 'App\Http\Controllers\ChatController@fileUpload');
 
 });
 
@@ -80,10 +81,15 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
 
     $api->get('trainer/new_pwd', 'App\Http\Controllers\TrainerController@newPwd'); 
 
-    $api->post('trainer/reg_id', 'App\Http\Controllers\TrainerController@updateRegId');   
+    $api->post('trainer/reg_id', 'App\Http\Controllers\TrainerController@updateRegId');
+
+    $api->get('trainer/list_users', 'App\Http\Controllers\TrainerController@listUsers');   
+
 
     // Common API's for trainer and patient
     $api->post('post_message', 'App\Http\Controllers\ChatController@postMessage');
+
+    $api->post('file_upload', 'App\Http\Controllers\ChatController@fileUpload');
 
     $api->get('push_message', 'App\Http\Controllers\ChatController@pushMessage');
 
