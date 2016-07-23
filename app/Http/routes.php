@@ -78,7 +78,9 @@ $api->version('v1', ['middleware' => 'oauth'], function ($api) {
     // Trainer API's
     $api->get('trainer/change_pwd', 'App\Http\Controllers\TrainerController@changePwd');
 
-    $api->get('trainer/new_pwd', 'App\Http\Controllers\TrainerController@newPwd');    
+    $api->get('trainer/new_pwd', 'App\Http\Controllers\TrainerController@newPwd'); 
+
+    $api->post('trainer/reg_id', 'App\Http\Controllers\TrainerController@updateRegId');   
 
     // Common API's for trainer and patient
     $api->post('post_message', 'App\Http\Controllers\ChatController@postMessage');

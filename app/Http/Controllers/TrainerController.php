@@ -12,17 +12,24 @@ class TrainerController extends Controller
     public function login() {
 
 	    $email = Input::get('email');
-	    $password = Input::get('password');    	
+	    $password = Input::get('password'); 
+	    $pushy_id = Input::get('pushy_id');
+
 	    // echo \App\Trainer::where('email', '=', $email)->exists(); exit;
 	    if (\App\Trainer::where('email', '=', $email)->exists()) {
 
 	    	$trainer = \App\Trainer::where('email', '=', $email)->first();
+	        
+
 
 	        $hashedPassword = $trainer->password;
 	        // echo $hashedPassword; exit;
 
 	        if (\Hash::check($password, $hashedPassword)) {
 	        	// echo "hey"; exit;
+	        	$trainer->pushy_id = $pushy_id;
+	        	$trainer->save();	    		        	
+	        	
 				$responseArray = [
 					'message' => 'Trainer authenticated',
 					'data' => $trainer,
@@ -174,5 +181,37 @@ class TrainerController extends Controller
 				return response()->json($responseArray);	
 	    	}
 	    }
+	}
+
+
+	public function updateRegId() {
+
+		$user_id = \Authorizer::getResourceOwnerId();
+
+		$user = \App\User::find($user_id);
+
+		$pushy_id = Input::get('pushy_id');
+
+		$user->pushy_id = $pushy_id;
+
+		$save = $user->save();
+
+		if($save) {
+			$responseArray = [
+				'message' => 'Registration id updated',
+				'status_code' => 200
+			];
+				
+			return response()->json($responseArray);	
+		}
+		else {
+			$responseArray = [
+				'message' => 'Error updating registration id',
+				'status_code' => 400
+			];
+				
+			return response()->json($responseArray);	
+		}
+
 	}    
 }
