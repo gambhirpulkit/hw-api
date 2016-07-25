@@ -56,7 +56,7 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'version' => '2006-03-01',
+            'version' => 'latest',
             'key'    => env('S3_KEY'),
             'secret' => env('S3_SECRET'),
             'region' => env('S3_REGION'),
