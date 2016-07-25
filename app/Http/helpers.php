@@ -69,9 +69,18 @@ class Helper
         
     }
 
-    public static function sendPushNotification( $data, $ids ) {
+    public static function sendPushNotification( $data, $ids, $sender ) {
+
+		$apiKey = '';
+
+    	if($sender = 'user') {
+    		$apiKey = '0b08951311e19d18b21c0461127a5b9bbb7b97243f0ef1a27f4fbedaa90be447';
+    	}
+    	else {
+    		$apiKey = '0b08951311e19d18b21c0461127a5b9bbb7b97243f0ef1a27f4fbedaa90be447';
+    	}
         // Insert your Secret API Key here
-        $apiKey = '0b08951311e19d18b21c0461127a5b9bbb7b97243f0ef1a27f4fbedaa90be447';
+        
 
         // Set post variables
         $post = array(

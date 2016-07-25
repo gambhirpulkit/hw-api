@@ -66,7 +66,7 @@ class ChatController extends Controller
 				$ids = array($trainer->pushy_id);
 
 				// Send it with Pushy
-				\Helper::sendPushNotification($data, $ids);  			    
+				\Helper::sendPushNotification($data, $ids, $sender);  			    
 
 			    // echo $val;
 
@@ -92,7 +92,7 @@ class ChatController extends Controller
 				$ids = array($user->pushy_id);
 
 				// Send it with Pushy
-				\Helper::sendPushNotification($data, $ids);  				    	
+				\Helper::sendPushNotification($data, $ids, $sender);  				    	
 				  			
     		}
 
