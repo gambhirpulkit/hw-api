@@ -137,7 +137,7 @@ class ChatController extends Controller
 			$responseArray = [
 				'message' => 'Upload successful',
 				'url' => $s3->url($fileName),
-				'status_code' => 502
+				'status_code' => 200
 			];
 			return response()->json($responseArray);   	
 
