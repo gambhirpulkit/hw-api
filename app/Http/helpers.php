@@ -77,7 +77,7 @@ class Helper
     		$apiKey = '0b08951311e19d18b21c0461127a5b9bbb7b97243f0ef1a27f4fbedaa90be447';
     	}
     	else {
-    		$apiKey = '0b08951311e19d18b21c0461127a5b9bbb7b97243f0ef1a27f4fbedaa90be447';
+    		$apiKey = '71fe72d90ed6b90bf4847f3741319c147ff5f5ed1643df5163efbd66a8b968d1';
     	}
         // Insert your Secret API Key here
         

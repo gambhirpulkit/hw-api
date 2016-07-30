@@ -60,21 +60,17 @@ class ChatController extends Controller
 			    $data['sending_time'] = $time_format;
 			    $data['name'] = $user->name;
 
-			    // $val = $pusher->trigger('messages', 'new_message', $data);
-
 				// The recipient device registration IDs
 				$ids = array($trainer->pushy_id);
 
 				// Send it with Pushy
 				\Helper::sendPushNotification($data, $ids, $sender);  			    
 
-			    // echo $val;
 
     		}
     		else {
     			$user = \App\User::find($user_id);
-    			$trainer = \App\Trainer::find($trainer_id);
-
+    
 			    $pusher = \App::make('pusher');
 			    
 			    $data = array();
@@ -95,6 +91,7 @@ class ChatController extends Controller
 				\Helper::sendPushNotification($data, $ids, $sender);  				    	
 				  			
     		}
+			$trainer = \App\Trainer::find($trainer_id);
 
 
 			$responseArray = [
