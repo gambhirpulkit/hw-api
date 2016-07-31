@@ -70,7 +70,8 @@ class ChatController extends Controller
     		}
     		else {
     			$user = \App\User::find($user_id);
-    
+    			$trainer = \App\Trainer::find($trainer_id);
+    			
 			    $pusher = \App::make('pusher');
 			    
 			    $data = array();
@@ -91,7 +92,7 @@ class ChatController extends Controller
 				\Helper::sendPushNotification($data, $ids, $sender);  				    	
 				  			
     		}
-			$trainer = \App\Trainer::find($trainer_id);
+			
 
 
 			$responseArray = [
